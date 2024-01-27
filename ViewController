@@ -1,0 +1,105 @@
+import UIKit
+
+class AlertViewController: UIViewController {
+    
+    private var usernames = ["mark", "archi", "arthur"]
+    
+    private lazy var okButton: UIButton = {
+        var config = UIButton.Configuration.bordered()
+        config.title = "ok"
+        config.baseForegroundColor = .white
+        config.baseBackgroundColor = .systemOrange
+        config.cornerStyle = .capsule
+        
+        let button = UIButton(configuration: config)
+        button.addTarget(self, action: #selector(okTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
+    private lazy var textField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "Type here.."
+        tf.borderStyle = .roundedRect
+        tf.backgroundColor = .white
+        let padding: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 15))
+        tf.leftView = padding
+        tf.leftViewMode = .always
+        tf.clipsToBounds = true  //  it means that the content or subviews of the UITextField that extend beyond its visible bounds will be clipped or hidden.
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        
+        return tf
+    }()
+    
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemCyan
+        view.addSubview(okButton)
+        view.addSubview(textField)
+        setLayouts()
+    }
+    
+    
+    private func setLayouts() {
+        NSLayoutConstraint.activate([
+            okButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            okButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            textField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            textField.centerYAnchor.constraint(equalTo: okButton.bottomAnchor, constant: 50),
+            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+        ])
+    }
+    
+    func showBadAlert() {
+        let alert = UIAlertController(title: "Wrong username", message: "Type correct one", preferredStyle: .alert)
+        
+        // MARK: - first button
+        
+        alert.addAction(UIAlertAction(title: "Ok!", style: .cancel, handler: { event in
+                    // Делаем что-то когда пользователь нажмёт на кнопку ок
+        }))
+        
+        // MARK: - second button
+        
+        alert.addAction(UIAlertAction(title: "No!", style: .destructive))
+        
+        present(alert, animated: true)
+    }
+    
+    func showGoodAlert() {
+        let alert = UIAlertController(title: "Perfect", message: "you've typed correct username", preferredStyle: .actionSheet)
+        
+        // MARK: - first button
+        
+        alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { event in
+            
+        }))
+        
+        // MARK: - first button
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        present(alert, animated: true)
+    }
+    
+    @objc
+    private func okTapped() {
+        /*if usernames.contains(textField.text ?? "")*/
+        let username = usernames.filter { $0 == textField.text }
+        if !username.isEmpty {
+            showGoodAlert()
+            textField.text = ""
+        } else {
+            showBadAlert()
+            textField.text = ""
+
+        }
+    }
+    
+    
+}
